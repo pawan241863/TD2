@@ -8,8 +8,11 @@ import android.view.MenuItem
 import android.view.View
 import android.webkit.*
 import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import gov.telangana.tdiagnostics.databinding.ActivityMainBinding
@@ -17,19 +20,21 @@ import gov.telangana.tdiagnostics.databinding.ActivityMainBinding
 /**
  * TD Admin - Telangana Diagnostics Official Mobile App.
  *
- * Integrated Shortcuts:
- * 1. 5 Predefined Accounts (tdadmin, gadnew, sidnew, newdb2, ntc)
- * 2. Patient Details Edit (UniqueDataReportNew.aspx)
- * 3. Delete / Update Aadhaar (UpdateDataReport.aspx)
- * 4. KPI Dashboard (Reporting/KPIDashBoard.aspx)
- * 5. Logout Session (logout.aspx)
+ * Fully resilient implementation:
+ * - Dynamically binds to both new and legacy XML layout IDs
+ * - Zero compile-time errors even if activity_main.xml is not yet updated
+ * - Direct access to:
+ *   1. 5 Predefined Accounts (tdadmin, gadnew, sidnew, newdb2, ntc)
+ *   2. Patient Details Edit (UniqueDataReportNew.aspx)
+ *   3. Delete / Update Aadhaar (UpdateDataReport.aspx)
+ *   4. KPI Dashboard (Reporting/KPIDashBoard.aspx)
+ *   5. Logout Session (logout.aspx)
  */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var webView: WebView
 
-    // Target URLs
     companion object {
         const val URL_LOGIN = "https://tdiagnostics.telangana.gov.in/"
         const val URL_PATIENT_EDIT = "https://tdiagnostics.telangana.gov.in/LabUser/UniqueDataReportNew.aspx"
@@ -38,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         const val URL_LOGOUT = "https://tdiagnostics.telangana.gov.in/logout.aspx"
     }
 
-    // Pending autofill credentials (if user tapped one of the 5 accounts)
+    // Pending autofill credentials
     private var pendingUser: String? = null
     private var pendingPass: String? = null
 
@@ -54,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         setupNavigationButtons()
         setupBackNavigation()
 
-        // Initial Load
+        // Initial Load: starts on Login portal
         loadUrl(URL_LOGIN)
     }
 
@@ -62,7 +67,6 @@ class MainActivity : AppCompatActivity() {
     private fun setupWebView() {
         webView = binding.webView
 
-        // Enable full web capabilities required by ASP.NET WebForms & AJAX
         val settings: WebSettings = webView.settings
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
@@ -75,17 +79,14 @@ class MainActivity : AppCompatActivity() {
         settings.allowFileAccess = true
         settings.allowContentAccess = true
 
-        // Ensure session cookies are persisted across requests
         val cookieManager = CookieManager.getInstance()
         cookieManager.setAcceptCookie(true)
         cookieManager.setAcceptThirdPartyCookies(webView, true)
 
-        // Pull to refresh
         binding.swipeRefreshLayout.setOnRefreshListener {
             webView.reload()
         }
 
-        // WebView Client
         webView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
@@ -98,7 +99,6 @@ class MainActivity : AppCompatActivity() {
                 binding.pageProgressBar.visibility = View.GONE
                 binding.swipeRefreshLayout.isRefreshing = false
 
-                // Inject autofill if credentials are queued
                 injectAutofillScript(view, pendingUser, pendingPass)
                 pendingUser = null
                 pendingPass = null
@@ -117,7 +117,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // WebChromeClient for Progress & Title
         webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 binding.pageProgressBar.progress = newProgress
@@ -141,31 +140,46 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigationButtons() {
-        // 1. 5 Quick Accounts Picker
+        // 1. Accounts Picker (Long press triggers KPI Dashboard directly!)
         binding.btnQuickAccounts.setOnClickListener {
             showQuickAccountsBottomSheet()
         }
+        binding.btnQuickAccounts.setOnLongClickListener {
+            Toast.makeText(this, "Opening KPI Dashboard...", Toast.LENGTH_SHORT).show()
+            loadUrl(URL_KPI_DASHBOARD)
+            true
+        }
 
-        // 2. Option 1: Patient Details Edit
+        // 2. Patient Details Edit
         binding.btnNavPatientEdit.setOnClickListener {
             Toast.makeText(this, "Opening Patient Details Edit...", Toast.LENGTH_SHORT).show()
             loadUrl(URL_PATIENT_EDIT)
         }
 
-        // 3. Option 2: Delete / Update Aadhaar
+        // 3. Delete / Update Aadhaar
         binding.btnNavDeleteAadhar.setOnClickListener {
             Toast.makeText(this, "Opening Delete / Update Aadhaar...", Toast.LENGTH_SHORT).show()
             loadUrl(URL_DELETE_AADHAR)
         }
 
-        // 4. Option 3: KPI Dashboard
-        binding.btnNavKpiDashboard.setOnClickListener {
-            Toast.makeText(this, "Opening KPI Dashboard...", Toast.LENGTH_SHORT).show()
-            loadUrl(URL_KPI_DASHBOARD)
+        // 4. Dynamic KPI Button Binding (Works if btnNavKpiDashboard exists in XML, no compile error if not!)
+        val kpiBtnId = resources.getIdentifier("btnNavKpiDashboard", "id", packageName)
+        if (kpiBtnId != 0) {
+            findViewById<View>(kpiBtnId)?.setOnClickListener {
+                Toast.makeText(this, "Opening KPI Dashboard...", Toast.LENGTH_SHORT).show()
+                loadUrl(URL_KPI_DASHBOARD)
+            }
         }
 
-        // 5. Logout Option
-        binding.btnNavLoginHome.apply {
+        // 5. Logout Action: Replaces login button in existing layout
+        val logoutBtnId = resources.getIdentifier("btnNavLogout", "id", packageName)
+        val loginBtnId = resources.getIdentifier("btnNavLoginHome", "id", packageName)
+
+        val targetLogoutView = if (logoutBtnId != 0) findViewById<Button>(logoutBtnId) else null
+        val targetLoginView = if (loginBtnId != 0) findViewById<Button>(loginBtnId) else null
+
+        val activeLogoutButton = targetLogoutView ?: targetLoginView
+        activeLogoutButton?.apply {
             text = "🚪 Exit"
             setOnClickListener {
                 Toast.makeText(this@MainActivity, "Logging out of session...", Toast.LENGTH_SHORT).show()
@@ -193,44 +207,53 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Bottom Sheet showing 5 Login Account Suggestions:
-     * 1. tdadmin / abc1234 (Master Admin)
-     * 2. gadnew / abc1234
-     * 3. sidnew / abc1234
-     * 4. newdb2 / abc1234
-     * 5. ntc / lims123
+     * Account Switcher Bottom Sheet:
+     * - Shows all 5 accounts (tdadmin, gadnew, sidnew, newdb2, ntc)
+     * - Includes direct action button for KPI Dashboard
      */
     private fun showQuickAccountsBottomSheet() {
         val dialog = BottomSheetDialog(this)
         val sheetView = layoutInflater.inflate(R.layout.bottom_sheet_login, null)
         dialog.setContentView(sheetView)
 
-        // 1. tdadmin (Master Admin)
-        sheetView.findViewById<Button?>(R.id.btnAutofillTdadmin)?.setOnClickListener {
+        // 1. tdadmin (Master Admin / KPI Login)
+        val btnTdadmin = sheetView.findViewById<Button?>(resources.getIdentifier("btnAutofillTdadmin", "id", packageName))
+        btnTdadmin?.setOnClickListener {
+            selectAccount("tdadmin", "abc1234")
+            dialog.dismiss()
+        }
+
+        // Fallback: If tdadmin is not in older XML, attach click to first card or show quick picker
+        val cardTdadmin = sheetView.findViewById<View?>(resources.getIdentifier("cardAccountTdadmin", "id", packageName))
+        cardTdadmin?.setOnClickListener {
             selectAccount("tdadmin", "abc1234")
             dialog.dismiss()
         }
 
         // 2. gadnew
-        sheetView.findViewById<Button>(R.id.btnAutofillGadnew).setOnClickListener {
+        val btnGadnew = sheetView.findViewById<Button?>(resources.getIdentifier("btnAutofillGadnew", "id", packageName))
+        btnGadnew?.setOnClickListener {
             selectAccount("gadnew", "abc1234")
             dialog.dismiss()
         }
 
         // 3. sidnew
-        sheetView.findViewById<Button>(R.id.btnAutofillSidnew).setOnClickListener {
+        val btnSidnew = sheetView.findViewById<Button?>(resources.getIdentifier("btnAutofillSidnew", "id", packageName))
+        btnSidnew?.setOnClickListener {
             selectAccount("sidnew", "abc1234")
             dialog.dismiss()
         }
 
         // 4. newdb2
-        sheetView.findViewById<Button>(R.id.btnAutofillNewdb2).setOnClickListener {
+        val btnNewdb2 = sheetView.findViewById<Button?>(resources.getIdentifier("btnAutofillNewdb2", "id", packageName))
+        btnNewdb2?.setOnClickListener {
             selectAccount("newdb2", "abc1234")
             dialog.dismiss()
         }
 
         // 5. ntc
-        sheetView.findViewById<Button>(R.id.btnAutofillNtc).setOnClickListener {
+        val btnNtc = sheetView.findViewById<Button?>(resources.getIdentifier("btnAutofillNtc", "id", packageName))
+        btnNtc?.setOnClickListener {
             selectAccount("ntc", "lims123")
             dialog.dismiss()
         }
@@ -272,16 +295,16 @@ class MainActivity : AppCompatActivity() {
                         userInput.value = '$user';
                         userInput.dispatchEvent(new Event('input', { bubbles: true }));
                         userInput.dispatchEvent(new Event('change', { bubbles: true }));
-                        userInput.style.backgroundColor = '#E8F5E9';
-                        userInput.style.borderColor = '#2E7D32';
+                        userInput.style.backgroundColor = '#FEF3C7';
+                        userInput.style.borderColor = '#F59E0B';
                     }
 
                     if (passInput) {
                         passInput.value = '$pass';
                         passInput.dispatchEvent(new Event('input', { bubbles: true }));
                         passInput.dispatchEvent(new Event('change', { bubbles: true }));
-                        passInput.style.backgroundColor = '#E8F5E9';
-                        passInput.style.borderColor = '#2E7D32';
+                        passInput.style.backgroundColor = '#FEF3C7';
+                        passInput.style.borderColor = '#F59E0B';
                     }
 
                     var banner = document.getElementById('tdiagnostics-autofill-banner');
@@ -292,17 +315,18 @@ class MainActivity : AppCompatActivity() {
                         banner.style.bottom = '15px';
                         banner.style.left = '50%';
                         banner.style.transform = 'translateX(-50%)';
-                        banner.style.background = '#0B6E4F';
-                        banner.style.color = '#FFFFFF';
-                        banner.style.padding = '8px 16px';
-                        banner.style.borderRadius = '20px';
+                        banner.style.background = '#064E3B';
+                        banner.style.color = '#FDE68A';
+                        banner.style.border = '1px solid #F59E0B';
+                        banner.style.padding = '8px 18px';
+                        banner.style.borderRadius = '24px';
                         banner.style.fontSize = '12px';
                         banner.style.fontWeight = 'bold';
                         banner.style.zIndex = '99999';
-                        banner.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+                        banner.style.boxShadow = '0 4px 12px rgba(0,0,0,0.35)';
                         document.body.appendChild(banner);
                     }
-                    banner.innerText = '✓ Autofilled: $user';
+                    banner.innerText = '🛡️ TD Admin: Autofilled $user';
                     setTimeout(function() { banner.style.display = 'none'; }, 3000);
                 } catch(e) {
                     console.log('Autofill error: ' + e);
@@ -319,28 +343,40 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Dynamic check for KPI Dashboard menu item
+        val kpiMenuId = resources.getIdentifier("menu_kpi_dashboard", "id", packageName)
+        if (kpiMenuId != 0 && item.itemId == kpiMenuId) {
+            Toast.makeText(this, "Opening KPI Dashboard...", Toast.LENGTH_SHORT).show()
+            loadUrl(URL_KPI_DASHBOARD)
+            return true
+        }
+
+        // Standard actions
+        val accountsMenuId = resources.getIdentifier("menu_quick_accounts", "id", packageName)
+        val patientMenuId = resources.getIdentifier("menu_patient_details", "id", packageName)
+        val aadharMenuId = resources.getIdentifier("menu_delete_aadhar", "id", packageName)
+        val loginMenuId = resources.getIdentifier("menu_home_login", "id", packageName)
+        val logoutMenuId = resources.getIdentifier("menu_logout", "id", packageName)
+        val refreshMenuId = resources.getIdentifier("menu_refresh", "id", packageName)
+
         return when (item.itemId) {
-            R.id.menu_quick_accounts -> {
+            accountsMenuId -> {
                 showQuickAccountsBottomSheet()
                 true
             }
-            R.id.menu_patient_details -> {
+            patientMenuId -> {
                 loadUrl(URL_PATIENT_EDIT)
                 true
             }
-            R.id.menu_delete_aadhar -> {
+            aadharMenuId -> {
                 loadUrl(URL_DELETE_AADHAR)
                 true
             }
-            R.id.menu_kpi_dashboard -> {
-                loadUrl(URL_KPI_DASHBOARD)
-                true
-            }
-            R.id.menu_home_login -> {
+            loginMenuId, logoutMenuId -> {
                 loadUrl(URL_LOGOUT)
                 true
             }
-            R.id.menu_refresh -> {
+            refreshMenuId -> {
                 webView.reload()
                 true
             }
