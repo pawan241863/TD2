@@ -2,7 +2,6 @@ package gov.telangana.tdiagnostics
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -22,6 +21,7 @@ import gov.telangana.tdiagnostics.databinding.ActivityMainBinding
  * 1. Login with 4 predefined district / facility accounts
  * 2. Patient Details Edit (UniqueDataReportNew.aspx)
  * 3. Delete / Update Aadhaar (UpdateDataReport.aspx)
+ * 4. Logout (logout.aspx)
  */
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         const val URL_LOGIN = "https://tdiagnostics.telangana.gov.in/"
         const val URL_PATIENT_EDIT = "https://tdiagnostics.telangana.gov.in/LabUser/UniqueDataReportNew.aspx"
         const val URL_DELETE_AADHAR = "https://tdiagnostics.telangana.gov.in/LabUser/UpdateDataReport.aspx"
+        const val URL_LOGOUT = "https://tdiagnostics.telangana.gov.in/logout.aspx"
     }
 
     // Pending autofill credentials (if user tapped one of the 4 accounts)
@@ -155,9 +156,10 @@ class MainActivity : AppCompatActivity() {
             loadUrl(URL_DELETE_AADHAR)
         }
 
-        // Login Home
-        binding.btnNavLoginHome.setOnClickListener {
-            loadUrl(URL_LOGIN)
+        // Replaced Login with Logout Option
+        binding.btnNavLogout.setOnClickListener {
+            Toast.makeText(this, "Logging out of session...", Toast.LENGTH_SHORT).show()
+            loadUrl(URL_LOGOUT)
         }
     }
 
@@ -180,7 +182,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Bottom Sheet showing the 4 Login Account Suggestions requested:
+     * Bottom Sheet showing the 4 Login Account Suggestions:
      * 1. gadnew / abc1234
      * 2. sidnew / abc1234
      * 3. newdb2 / abc1234
@@ -223,20 +225,16 @@ class MainActivity : AppCompatActivity() {
         val currentUrl = webView.url ?: ""
 
         if (!currentUrl.contains("tdiagnostics.telangana.gov.in") || currentUrl.contains("LabUser")) {
-            // Need to navigate to login page first
             pendingUser = username
             pendingPass = pass
             loadUrl(URL_LOGIN)
         } else {
-            // Already on login page, inject directly
             injectAutofillScript(webView, username, pass)
         }
     }
 
     /**
      * Robust JavaScript autofill injector tailored for ASP.NET WebForms.
-     * Searches common ASP.NET text field IDs and generic selectors,
-     * fills the fields and dispatches 'input' & 'change' events.
      */
     private fun injectAutofillScript(view: WebView?, user: String?, pass: String?) {
         if (view == null || user == null || pass == null) return
@@ -244,15 +242,12 @@ class MainActivity : AppCompatActivity() {
         val script = """
             (function() {
                 try {
-                    // Look for ASP.NET Username textbox
                     var userInputs = document.querySelectorAll(
                         "input[id*='txtUserName'], input[id*='txtUsername'], input[id*='txtUser'], " +
                         "input[id*='txtLogin'], input[id*='txtUserId'], input[name*='User'], " +
                         "input[type='text']:not([style*='display: none'])"
                     );
                     var userInput = userInputs.length > 0 ? userInputs[0] : null;
-
-                    // Look for ASP.NET Password textbox
                     var passInput = document.querySelector("input[type='password']");
 
                     if (userInput) {
@@ -271,7 +266,6 @@ class MainActivity : AppCompatActivity() {
                         passInput.style.borderColor = '#2E7D32';
                     }
 
-                    // Optional notification toast inside webpage
                     var banner = document.getElementById('tdiagnostics-autofill-banner');
                     if (!banner) {
                         banner = document.createElement('div');
@@ -320,8 +314,8 @@ class MainActivity : AppCompatActivity() {
                 loadUrl(URL_DELETE_AADHAR)
                 true
             }
-            R.id.menu_home_login -> {
-                loadUrl(URL_LOGIN)
+            R.id.menu_logout -> {
+                loadUrl(URL_LOGOUT)
                 true
             }
             R.id.menu_refresh -> {
