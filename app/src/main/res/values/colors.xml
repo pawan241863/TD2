@@ -1,12 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Brand Primary Colors (Cyber Emerald & Midnight Obsidian) -->
     <color name="primary">#10B981</color>
     <color name="primary_dark">#090D16</color>
     <color name="primary_variant">#047857</color>
+    <color name="primary_light">#34D399</color>
+
+    <!-- Accent Colors (Amber / Gold) -->
     <color name="accent">#F59E0B</color>
+    <color name="accent_gold">#FBBF24</color>
+    <color name="accent_light">#FEF3C7</color>
+
+    <!-- Backgrounds & Surfaces -->
     <color name="background_dark">#090D16</color>
+    <color name="background_light">#F8FAFC</color>
+    <color name="surface">#FFFFFF</color>
     <color name="surface_dark">#0F172A</color>
     <color name="surface_card">#1E293B</color>
-    <color name="text_primary">#F8FAFC</color>
-    <color name="text_secondary">#94A3B8</color>
+    <color name="surface_border">#334155</color>
+    <color name="surface_variant">#F1F5F9</color>
+    <color name="border_light">#E2E8F0</color>
+
+    <!-- Typography -->
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="text_muted">#94A3B8</color>
+
+    <!-- Master Admin (tdadmin) Card Colors -->
+    <color name="card_tdadmin_bg">#FEF3C7</color>
+    <color name="card_tdadmin_border">#F59E0B</color>
+    <color name="card_tdadmin_text">#78350F</color>
+
+    <!-- District 1 (gadnew) Card Colors -->
+    <color name="card_gad">#ECFDF5</color>
+    <color name="card_gad_border">#A7F3D0</color>
+    <color name="card_gad_text">#065F46</color>
+
+    <!-- District 2 (sidnew) Card Colors -->
+    <color name="card_sid">#F0F9FF</color>
+    <color name="card_sid_border">#BAE6FD</color>
+    <color name="card_sid_text">#0369A1</color>
+
+    <!-- Database 2 (newdb2) Card Colors -->
+    <color name="card_newdb">#FFFBEB</color>
+    <color name="card_newdb_border">#FDE68A</color>
+    <color name="card_newdb_text">#92400E</color>
+
+    <!-- NTC/LIMS (ntc) Card Colors -->
+    <color name="card_ntc">#FAF5FF</color>
+    <color name="card_ntc_border">#E9D5FF</color>
+    <color name="card_ntc_text">#6B21A8</color>
 </resources>
