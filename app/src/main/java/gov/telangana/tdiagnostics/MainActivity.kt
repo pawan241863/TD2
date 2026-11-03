@@ -15,13 +15,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import gov.telangana.tdiagnostics.databinding.ActivityMainBinding
 
 /**
- * Telangana Diagnostics (T-Diagnostics) Official Web Mobile Wrapper App.
+ * Telangana Diagnostics (T-Diagnostics) Official Mobile App.
  *
- * Provides dedicated shortcuts for:
- * 1. Login with 4 predefined district / facility accounts
+ * Integrated Shortcuts:
+ * 1. 4 Predefined District/Facility Accounts (gadnew, sidnew, newdb2, ntc)
  * 2. Patient Details Edit (UniqueDataReportNew.aspx)
  * 3. Delete / Update Aadhaar (UpdateDataReport.aspx)
- * 4. Logout (logout.aspx)
+ * 4. Logout Session (logout.aspx)
  */
 class MainActivity : AppCompatActivity() {
 
@@ -156,10 +156,13 @@ class MainActivity : AppCompatActivity() {
             loadUrl(URL_DELETE_AADHAR)
         }
 
-        // Replaced Login with Logout Option
-        binding.btnNavLogout.setOnClickListener {
-            Toast.makeText(this, "Logging out of session...", Toast.LENGTH_SHORT).show()
-            loadUrl(URL_LOGOUT)
+        // Replaced with Logout: uses existing XML button ID (btnNavLoginHome) so no XML edit is required!
+        binding.btnNavLoginHome.apply {
+            text = "🚪 Logout"
+            setOnClickListener {
+                Toast.makeText(this@MainActivity, "Logging out of session...", Toast.LENGTH_SHORT).show()
+                loadUrl(URL_LOGOUT)
+            }
         }
     }
 
@@ -314,7 +317,8 @@ class MainActivity : AppCompatActivity() {
                 loadUrl(URL_DELETE_AADHAR)
                 true
             }
-            R.id.menu_logout -> {
+            R.id.menu_home_login -> {
+                // Replaced login action with logout directly in existing menu ID!
                 loadUrl(URL_LOGOUT)
                 true
             }
