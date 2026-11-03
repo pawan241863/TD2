@@ -5,35 +5,49 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Background: Telangana Healthcare Emerald Green with Rounded Corners -->
+    <!-- Background: Deep Executive Admin Emerald (#064E3B) with Rounded Corners -->
     <path
-        android:fillColor="#0B6E4F"
+        android:fillColor="#064E3B"
         android:pathData="M 0,18 C 0,8 8,0 18,0 L 90,0 C 100,0 108,8 108,18 L 108,90 C 108,100 100,108 90,108 L 18,108 C 8,108 0,100 0,90 Z" />
 
-    <!-- Outer Gold Ring Accent -->
+    <!-- Outer Gold Border -->
     <path
         android:strokeColor="#F59E0B"
         android:strokeWidth="2.5"
-        android:pathData="M 54,14 A 40,40 0 1,1 53.9,14 Z" />
+        android:pathData="M 18,2 L 90,2 C 98.8,2 106,9.2 106,18 L 106,90 C 106,98.8 98.8,106 90,106 L 18,106 C 9.2,106 2,98.8 2,90 L 2,18 C 2,9.2 9.2,2 18,2 Z" />
 
-    <!-- Pure White Medical Cross (Vertical Bar) -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M 47,26 L 61,26 A 3,3 0 0,1 64,29 L 64,79 A 3,3 0 0,1 61,82 L 47,82 A 3,3 0 0,1 44,79 L 44,29 A 3,3 0 0,1 47,26 Z" />
-
-    <!-- Pure White Medical Cross (Horizontal Bar) -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M 26,47 L 82,47 A 3,3 0 0,1 85,50 L 85,58 A 3,3 0 0,1 82,61 L 26,61 A 3,3 0 0,1 23,58 L 23,50 A 3,3 0 0,1 26,47 Z" />
-
-    <!-- Golden Lab Core Diagnostic Circle -->
+    <!-- Admin Security Shield (Gold Outer) -->
     <path
         android:fillColor="#F59E0B"
-        android:pathData="M 54,44 A 10,10 0 1,1 53.9,44 Z" />
+        android:pathData="M 24,24 L 84,24 L 84,58 C 84,76 54,92 54,92 C 54,92 24,76 24,58 Z" />
 
-    <!-- Inner Emerald Core -->
+    <!-- Inner Shield (Crisp White) -->
     <path
-        android:fillColor="#0B6E4F"
-        android:pathData="M 54,49 A 5,5 0 1,1 53.9,49 Z" />
+        android:fillColor="#FFFFFF"
+        android:pathData="M 28,28 L 80,28 L 80,56 C 80,72 54,86 54,86 C 54,86 28,72 28,56 Z" />
+
+    <!-- Admin Keyhole Emblem (Deep Emerald #064E3B) -->
+    <path
+        android:fillColor="#064E3B"
+        android:pathData="M 54,40 A 8,8 0 1,1 53.9,40 Z" />
+    <path
+        android:fillColor="#064E3B"
+        android:pathData="M 50,45 L 58,45 L 61,64 L 47,64 Z" />
+
+    <!-- Gold Accent Star on Shield -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M 54,34 L 56,38 L 60,39 L 57,42 L 58,46 L 54,44 L 50,46 L 51,42 L 48,39 L 52,38 Z" />
+
+    <!-- 3 Admin Authority Stars Above Shield -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M 54,16 A 2.5,2.5 0 1,1 53.9,16 Z" />
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M 40,18 A 2,2 0 1,1 39.9,18 Z" />
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M 68,18 A 2,2 0 1,1 67.9,18 Z" />
 
 </vector>
