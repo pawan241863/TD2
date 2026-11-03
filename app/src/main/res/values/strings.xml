@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">T-Diagnostics</string>
+    <string name="action_login">Login Portal</string>
+    <string name="action_patient_details">Patient Details Edit</string>
+    <string name="action_delete_aadhar">Delete / Update Aadhaar</string>
+    <string name="login_suggestions_title">Quick Login Accounts</string>
+</resources>
