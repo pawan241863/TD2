@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Background: Telangana Healthcare Emerald Green with Rounded Corners -->
+    <path
+        android:fillColor="#0B6E4F"
+        android:pathData="M 0,18 C 0,8 8,0 18,0 L 90,0 C 100,0 108,8 108,18 L 108,90 C 108,100 100,108 90,108 L 18,108 C 8,108 0,100 0,90 Z" />
+
+    <!-- Outer Gold Ring Accent -->
+    <path
+        android:strokeColor="#F59E0B"
+        android:strokeWidth="2.5"
+        android:pathData="M 54,14 A 40,40 0 1,1 53.9,14 Z" />
+
+    <!-- Pure White Medical Cross (Vertical Bar) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 47,26 L 61,26 A 3,3 0 0,1 64,29 L 64,79 A 3,3 0 0,1 61,82 L 47,82 A 3,3 0 0,1 44,79 L 44,29 A 3,3 0 0,1 47,26 Z" />
+
+    <!-- Pure White Medical Cross (Horizontal Bar) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 26,47 L 82,47 A 3,3 0 0,1 85,50 L 85,58 A 3,3 0 0,1 82,61 L 26,61 A 3,3 0 0,1 23,58 L 23,50 A 3,3 0 0,1 26,47 Z" />
+
+    <!-- Golden Lab Core Diagnostic Circle -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M 54,44 A 10,10 0 1,1 53.9,44 Z" />
+
+    <!-- Inner Emerald Core -->
+    <path
+        android:fillColor="#0B6E4F"
+        android:pathData="M 54,49 A 5,5 0 1,1 53.9,49 Z" />
+
+</vector>
