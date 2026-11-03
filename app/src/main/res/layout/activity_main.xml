@@ -23,8 +23,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:background="@android:color/transparent"
-                app:title="Telangana Diagnostics"
-                app:subtitle="Central Lab • Hyderabad"
+                app:title="TD Admin"
+                app:subtitle="Admin Portal • Telangana"
                 app:titleTextColor="@color/surface"
                 app:subtitleTextColor="#A7F3D0" />
 
