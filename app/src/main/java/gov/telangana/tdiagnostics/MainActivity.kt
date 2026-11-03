@@ -15,13 +15,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import gov.telangana.tdiagnostics.databinding.ActivityMainBinding
 
 /**
- * Telangana Diagnostics (T-Diagnostics) Official Mobile App.
+ * TD Admin - Telangana Diagnostics Official Mobile App.
  *
  * Integrated Shortcuts:
- * 1. 4 Predefined District/Facility Accounts (gadnew, sidnew, newdb2, ntc)
+ * 1. 5 Predefined Accounts (tdadmin, gadnew, sidnew, newdb2, ntc)
  * 2. Patient Details Edit (UniqueDataReportNew.aspx)
  * 3. Delete / Update Aadhaar (UpdateDataReport.aspx)
- * 4. Logout Session (logout.aspx)
+ * 4. KPI Dashboard (Reporting/KPIDashBoard.aspx)
+ * 5. Logout Session (logout.aspx)
  */
 class MainActivity : AppCompatActivity() {
 
@@ -33,10 +34,11 @@ class MainActivity : AppCompatActivity() {
         const val URL_LOGIN = "https://tdiagnostics.telangana.gov.in/"
         const val URL_PATIENT_EDIT = "https://tdiagnostics.telangana.gov.in/LabUser/UniqueDataReportNew.aspx"
         const val URL_DELETE_AADHAR = "https://tdiagnostics.telangana.gov.in/LabUser/UpdateDataReport.aspx"
+        const val URL_KPI_DASHBOARD = "https://tdiagnostics.telangana.gov.in/Reporting/KPIDashBoard.aspx"
         const val URL_LOGOUT = "https://tdiagnostics.telangana.gov.in/logout.aspx"
     }
 
-    // Pending autofill credentials (if user tapped one of the 4 accounts)
+    // Pending autofill credentials (if user tapped one of the 5 accounts)
     private var pendingUser: String? = null
     private var pendingPass: String? = null
 
@@ -139,26 +141,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigationButtons() {
-        // 4 Quick Accounts Picker
+        // 1. 5 Quick Accounts Picker
         binding.btnQuickAccounts.setOnClickListener {
             showQuickAccountsBottomSheet()
         }
 
-        // Option 1: Patient Details Edit
+        // 2. Option 1: Patient Details Edit
         binding.btnNavPatientEdit.setOnClickListener {
             Toast.makeText(this, "Opening Patient Details Edit...", Toast.LENGTH_SHORT).show()
             loadUrl(URL_PATIENT_EDIT)
         }
 
-        // Option 2: Delete / Update Aadhaar
+        // 3. Option 2: Delete / Update Aadhaar
         binding.btnNavDeleteAadhar.setOnClickListener {
             Toast.makeText(this, "Opening Delete / Update Aadhaar...", Toast.LENGTH_SHORT).show()
             loadUrl(URL_DELETE_AADHAR)
         }
 
-        // Replaced with Logout: uses existing XML button ID (btnNavLoginHome) so no XML edit is required!
+        // 4. Option 3: KPI Dashboard
+        binding.btnNavKpiDashboard.setOnClickListener {
+            Toast.makeText(this, "Opening KPI Dashboard...", Toast.LENGTH_SHORT).show()
+            loadUrl(URL_KPI_DASHBOARD)
+        }
+
+        // 5. Logout Option
         binding.btnNavLoginHome.apply {
-            text = "🚪 Logout"
+            text = "🚪 Exit"
             setOnClickListener {
                 Toast.makeText(this@MainActivity, "Logging out of session...", Toast.LENGTH_SHORT).show()
                 loadUrl(URL_LOGOUT)
@@ -185,36 +193,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Bottom Sheet showing the 4 Login Account Suggestions:
-     * 1. gadnew / abc1234
-     * 2. sidnew / abc1234
-     * 3. newdb2 / abc1234
-     * 4. ntc / lims123
+     * Bottom Sheet showing 5 Login Account Suggestions:
+     * 1. tdadmin / abc1234 (Master Admin)
+     * 2. gadnew / abc1234
+     * 3. sidnew / abc1234
+     * 4. newdb2 / abc1234
+     * 5. ntc / lims123
      */
     private fun showQuickAccountsBottomSheet() {
         val dialog = BottomSheetDialog(this)
         val sheetView = layoutInflater.inflate(R.layout.bottom_sheet_login, null)
         dialog.setContentView(sheetView)
 
-        // 1. gadnew
+        // 1. tdadmin (Master Admin)
+        sheetView.findViewById<Button?>(R.id.btnAutofillTdadmin)?.setOnClickListener {
+            selectAccount("tdadmin", "abc1234")
+            dialog.dismiss()
+        }
+
+        // 2. gadnew
         sheetView.findViewById<Button>(R.id.btnAutofillGadnew).setOnClickListener {
             selectAccount("gadnew", "abc1234")
             dialog.dismiss()
         }
 
-        // 2. sidnew
+        // 3. sidnew
         sheetView.findViewById<Button>(R.id.btnAutofillSidnew).setOnClickListener {
             selectAccount("sidnew", "abc1234")
             dialog.dismiss()
         }
 
-        // 3. newdb2
+        // 4. newdb2
         sheetView.findViewById<Button>(R.id.btnAutofillNewdb2).setOnClickListener {
             selectAccount("newdb2", "abc1234")
             dialog.dismiss()
         }
 
-        // 4. ntc
+        // 5. ntc
         sheetView.findViewById<Button>(R.id.btnAutofillNtc).setOnClickListener {
             selectAccount("ntc", "lims123")
             dialog.dismiss()
@@ -227,7 +242,7 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Selected: $username", Toast.LENGTH_SHORT).show()
         val currentUrl = webView.url ?: ""
 
-        if (!currentUrl.contains("tdiagnostics.telangana.gov.in") || currentUrl.contains("LabUser")) {
+        if (!currentUrl.contains("tdiagnostics.telangana.gov.in") || currentUrl.contains("LabUser") || currentUrl.contains("Reporting")) {
             pendingUser = username
             pendingPass = pass
             loadUrl(URL_LOGIN)
@@ -317,8 +332,11 @@ class MainActivity : AppCompatActivity() {
                 loadUrl(URL_DELETE_AADHAR)
                 true
             }
+            R.id.menu_kpi_dashboard -> {
+                loadUrl(URL_KPI_DASHBOARD)
+                true
+            }
             R.id.menu_home_login -> {
-                // Replaced login action with logout directly in existing menu ID!
                 loadUrl(URL_LOGOUT)
                 true
             }
