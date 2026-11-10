@@ -1,53 +1,113 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
+    android:viewportWidth="554"
+    android:viewportHeight="554">
 
-    <!-- Background: Deep Executive Admin Emerald (#064E3B) with Rounded Corners -->
+    <!-- Bottom Shadow -->
     <path
-        android:fillColor="#064E3B"
-        android:pathData="M 0,18 C 0,8 8,0 18,0 L 90,0 C 100,0 108,8 108,18 L 108,90 C 108,100 100,108 90,108 L 18,108 C 8,108 0,100 0,90 Z" />
+        android:fillColor="#DDE1E8"
+        android:pathData="M120,488 C180,476 374,476 434,488 C374,500 180,500 120,488Z" />
 
-    <!-- Outer Gold Border -->
+    <!-- Outer Gear -->
     <path
-        android:strokeColor="#F59E0B"
-        android:strokeWidth="2.5"
-        android:pathData="M 18,2 L 90,2 C 98.8,2 106,9.2 106,18 L 106,90 C 106,98.8 98.8,106 90,106 L 18,106 C 9.2,106 2,98.8 2,90 L 2,18 C 2,9.2 9.2,2 18,2 Z" />
+        android:fillColor="#202F4F"
+        android:pathData="
+        M242,58
+        Q277,55 312,58
+        Q321,60 325,72
+        L332,96
+        L362,110
+        L385,99
+        Q396,94 405,103
+        L432,130
+        Q443,141 436,153
+        L423,176
+        L437,214
+        L464,222
+        Q478,226 478,242
+        L478,277
+        Q478,295 464,301
+        L438,310
+        L423,346
+        L437,370
+        Q444,382 432,394
+        L405,419
+        Q394,427 382,420
+        L362,409
+        L326,425
+        L317,450
+        Q313,461 299,461
+        L254,461
+        Q241,461 237,450
+        L229,425
+        L191,410
+        L169,421
+        Q157,426 146,416
+        L119,391
+        Q109,381 116,369
+        L130,345
+        L115,309
+        L89,301
+        Q75,297 75,282
+        L75,241
+        Q75,226 89,221
+        L111,214
+        L128,176
+        L115,153
+        Q109,141 119,130
+        L146,103
+        Q157,93 170,100
+        L191,110
+        L229,94
+        L235,72
+        Q237,61 242,58 Z" />
 
-    <!-- Admin Security Shield (Gold Outer) -->
-    <path
-        android:fillColor="#F59E0B"
-        android:pathData="M 24,24 L 84,24 L 84,58 C 84,76 54,92 54,92 C 54,92 24,76 24,58 Z" />
-
-    <!-- Inner Shield (Crisp White) -->
+    <!-- White Inner Circle -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M 28,28 L 80,28 L 80,56 C 80,72 54,86 54,86 C 54,86 28,72 28,56 Z" />
+        android:pathData="
+        M277,133
+        A127,127 0,1 1,277,387
+        A127,127 0,1 1,277,133 Z" />
 
-    <!-- Admin Keyhole Emblem (Deep Emerald #064E3B) -->
+    <!-- User Head -->
     <path
-        android:fillColor="#064E3B"
-        android:pathData="M 54,40 A 8,8 0 1,1 53.9,40 Z" />
-    <path
-        android:fillColor="#064E3B"
-        android:pathData="M 50,45 L 58,45 L 61,64 L 47,64 Z" />
+        android:fillColor="#0875F9"
+        android:pathData="
+        M239,211
+        C246,181 309,171 314,211
+        L316,225
+        C328,218 327,236 320,248
+        C316,270 298,284 277,284
+        C256,284 238,269 234,248
+        C225,235 228,218 239,225 Z" />
 
-    <!-- Gold Accent Star on Shield -->
+    <!-- User Body -->
     <path
-        android:fillColor="#F59E0B"
-        android:pathData="M 54,34 L 56,38 L 60,39 L 57,42 L 58,46 L 54,44 L 50,46 L 51,42 L 48,39 L 52,38 Z" />
+        android:fillColor="#0875F9"
+        android:pathData="
+        M248,284
+        L263,286
+        L277,307
+        L291,286
+        L307,284
+        C331,292 348,308 352,333
+        L354,346
+        C308,383 246,383 200,346
+        L202,333
+        C207,308 224,292 248,284 Z" />
 
-    <!-- 3 Admin Authority Stars Above Shield -->
+    <!-- Shirt Collar -->
     <path
-        android:fillColor="#F59E0B"
-        android:pathData="M 54,16 A 2.5,2.5 0 1,1 53.9,16 Z" />
-    <path
-        android:fillColor="#F59E0B"
-        android:pathData="M 40,18 A 2,2 0 1,1 39.9,18 Z" />
-    <path
-        android:fillColor="#F59E0B"
-        android:pathData="M 68,18 A 2,2 0 1,1 67.9,18 Z" />
+        android:fillColor="#FFFFFF"
+        android:pathData="
+        M263,286
+        L277,307
+        L291,286
+        L284,286
+        L277,295
+        L270,286 Z" />
 
 </vector>
